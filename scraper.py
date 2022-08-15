@@ -1,6 +1,8 @@
 import time
 from selenium import webdriver
 from selenium.webdriver.common.by import By
+from bs4 import BeautifulSoup
+
 
 options=webdriver.FirefoxOptions()
 options.add_argument('--ignore-certificate-errors')
@@ -38,3 +40,24 @@ if(initiate):
       
 print("Scraping started")
 page_source = driver.page_source
+
+
+soup = BeautifulSoup(page_source, 'lxml')
+reviews = []
+post_list = soup.find_all('div', class_='list-item')
+
+
+for post in post_list:
+   
+    post_div = post.find('div', class_='dyn_full_review')
+    # if review_div is None:
+    #     review_div = review_selector.find('div', class_='results-list--headline-container')
+   
+    review = review_div.find('div', class_='results-list--headline-container').find('a').get_text()
+    review = review.strip()
+    reviews.append(review)
+
+
+print(reviews)
+
+
